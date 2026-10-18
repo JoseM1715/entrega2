@@ -1,0 +1,79 @@
+# Levantar todo:      docker compose up --build
+# Detener:            docker compose down          (conserva los datos)
+# Borrar la BD:       docker compose down -v
+# Subir a DockerHub:  docker compose build && docker compose push
+# Usar las imágenes de DockerHub sin construir:  docker compose pull && docker compose up --no-build
+#
+# Requiere un archivo .env (copie .env.example).
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${PG_DATABASE:?Defina PG_DATABASE en .env}
+      POSTGRES_USER: ${PG_USER:?Defina PG_USER en .env}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:?Defina PG_PASSWORD en .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # Seeding: crea las tablas y carga admin, tabla maestra y datos de ejemplo. Corre una vez y termina.
+  seed:
+    build: ./backend
+    image: ${DOCKERHUB_USER:?Defina DOCKERHUB_USER en .env}/entrega2-backend:${VERSION:-1.0.0}
+    environment:
+      PG_HOST: db            # dentro de la red de compose, la BD se llama "db"
+      PG_PORT: "5432"
+      PG_DATABASE: ${PG_DATABASE}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Defina ADMIN_PASSWORD en .env}
+    command: python poblar_db.py
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  backend:
+    build: ./backend
+    image: ${DOCKERHUB_USER}/entrega2-backend:${VERSION:-1.0.0}
+    environment:
+      PG_HOST: db
+      PG_PORT: "5432"
+      PG_DATABASE: ${PG_DATABASE}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+    ports:
+      - "5000:5000"          # Swagger: http://localhost:5000/docs
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    image: ${DOCKERHUB_USER}/entrega2-frontend:${VERSION:-1.0.0}
+    ports:
+      - "8080:80"            # Web: http://localhost:8080
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost/ > /dev/null || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:

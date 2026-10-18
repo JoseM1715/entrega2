@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/JoseM1715/entrega2-backend.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/JoseM1715/entrega2-frontend.git
