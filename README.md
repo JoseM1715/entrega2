@@ -27,8 +27,8 @@ Calcula la cuota mensual que se debe ahorrar para llegar a una meta (interés co
 - Frontend: https://github.com/ValenMJ-02/entrega2-frontend.git
 
 ## Imágenes en DockerHub
-- https://hub.docker.com/r/USUARIO_DOCKERHUB/entrega2-backend
-- https://hub.docker.com/r/USUARIO_DOCKERHUB/entrega2-frontend
+- https://hub.docker.com/r/josem1715/entrega2-backend (`josem1715/entrega2-backend:1.0.0`)
+- https://hub.docker.com/r/josem1715/entrega2-frontend (`josem1715/entrega2-frontend:1.0.0`)
 
 ## Requisitos
 - Git
@@ -45,7 +45,12 @@ cd entrega2
 ```
 Si ya clonó sin esa opción: `git submodule update --init --recursive`
 
-**Opción B: imágenes de DockerHub** (sin código fuente): descargue solo `docker-compose.yml` y `.env.example` y use `docker compose pull`.
+**Opción B: imágenes de DockerHub** (sin código fuente):
+```
+docker pull josem1715/entrega2-backend:1.0.0
+docker pull josem1715/entrega2-frontend:1.0.0
+```
+Para correr todo con esas imágenes descargue solo `docker-compose.yml` y `.env.example`, cree el `.env` y use `docker compose pull` y `docker compose up --no-build`.
 
 ## Cómo instalar y ejecutar
 1. Copie las variables de entorno y edítelas (contraseñas y su usuario de DockerHub):
