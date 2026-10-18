@@ -6,9 +6,9 @@ Calcula la cuota mensual que se debe ahorrar para llegar a una meta (interés co
 ## Integrantes
 | Nombre | Rol |
 |---|---|
-| INTEGRANTE 1 | Backend |
-| INTEGRANTE 2 | Frontend |
-| INTEGRANTE 3 | Base de datos / DevOps |
+| Jose Angel Sanchez | Backend |
+| Valentina Mesa| Frontend |
+| Francisco Gomez | Base de datos / DevOps |
 
 ## Tipo de aplicación y tecnologías
 
