@@ -24,7 +24,7 @@ Calcula la cuota mensual que se debe ahorrar para llegar a una meta (interés co
 ## Repositorios
 - Monorepo (este): https://github.com/JoseM1715/entrega2
 - Backend: https://github.com/JoseM1715/entrega2-backend
-- Frontend: https://github.com/JoseM1715/entrega2-frontend
+- Frontend: https://github.com/ValenMJ-02/entrega2-frontend.git
 
 ## Imágenes en DockerHub
 - https://hub.docker.com/r/USUARIO_DOCKERHUB/entrega2-backend
