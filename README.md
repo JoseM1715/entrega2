@@ -15,8 +15,8 @@ Calcula la cuota mensual que se debe ahorrar para llegar a una meta (interés co
 | Componente | Tipo | Tecnología | Versión |
 |---|---|---|---|
 | frontend | Aplicación web estática (HTML + CSS + JavaScript) | nginx | 1.27 |
-| backend | API REST con Swagger/OpenAPI | Python / Flask / gunicorn | 3.12 / 3.x / 22+ |
-| backend | Driver de BD | psycopg2-binary | 2.9.x |
+| backend | API REST con Swagger/OpenAPI | Python / Flask / gunicorn | 3.12 / 3.1.3 / 26.2.0 |
+| backend | Driver de BD | psycopg2-binary | 2.9.13 |
 | base de datos | Relacional | PostgreSQL | 16 |
 | orquestación | Contenedores | Docker + Docker Compose | Docker Desktop reciente |
 | pruebas | Unitarias / E2E | unittest y pytest / Playwright | pytest 9.1.1 / Playwright 1.56.0 |
