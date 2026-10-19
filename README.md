@@ -25,7 +25,7 @@ Calcula la cuota mensual que hay que ahorrar para llegar a una meta (interés co
 |---|---|
 | Jose Angel Sanchez | Backend (API, Swagger, seeding) |
 | Valentina Mesa | Frontend (página web y nginx) |
-| Francisco Gomez | Base de datos, Docker Compose y DockerHub |
+| Francisco Gomez y Jose Angel Sanchez | Base de datos, Docker Compose y DockerHub |
 
 ## Cómo funciona
 
