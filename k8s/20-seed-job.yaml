@@ -1,0 +1,32 @@
+# Seeding: crea las tablas y carga admin, tabla maestra y datos de ejemplo. Corre una vez y termina.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: seed
+  namespace: ahorro
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      labels:
+        app: seed
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        - name: esperar-db
+          image: postgres:16-alpine
+          command: ["sh", "-c", "until pg_isready -h db -p 5432; do echo esperando la base de datos; sleep 2; done"]
+      containers:
+        - name: seed
+          image: josem1715/entrega2-backend:1.0.0
+          command: ["python", "poblar_db.py"]
+          envFrom:
+            - configMapRef: { name: app-config }
+          env:
+            - name: PG_PASSWORD
+              valueFrom: { secretKeyRef: { name: app-secrets, key: PG_PASSWORD } }
+            - name: ADMIN_PASSWORD
+              valueFrom: { secretKeyRef: { name: app-secrets, key: ADMIN_PASSWORD } }
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: 250m, memory: 256Mi }

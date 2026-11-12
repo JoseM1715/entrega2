@@ -1,0 +1,11 @@
+# Configuracion NO secreta. Las contrasenas van en el Secret "app-secrets" (ver k8s/README.md).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: ahorro
+data:
+  PG_HOST: db
+  PG_PORT: "5432"
+  PG_DATABASE: calculadora_ahorro
+  PG_USER: ahorro
