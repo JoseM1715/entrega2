@@ -1,0 +1,113 @@
+# CI del monorepo: pruebas -> validar Kubernetes -> construir y publicar imagenes -> actualizar el manifiesto.
+# Si un paso falla, los siguientes NO se ejecutan (nada se publica).
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["docs/**", "README.md"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  pruebas-backend:
+    name: Pruebas del backend
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: calculadora_ahorro
+          POSTGRES_USER: ahorro
+          POSTGRES_PASSWORD: clave_solo_para_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ahorro -d calculadora_ahorro"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      PG_HOST: localhost
+      PG_PORT: "5432"
+      PG_DATABASE: calculadora_ahorro
+      PG_USER: ahorro
+      PG_PASSWORD: clave_solo_para_ci
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependencias
+        run: pip install -r backend/requirements-dev.txt
+      - name: Pruebas unitarias y de base de datos
+        working-directory: backend
+        run: python -m pytest src/tests -v
+
+  validar-kubernetes:
+    name: Validar manifiestos de Kubernetes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install kubernetes-validate==1.31.0 pyyaml
+      - name: Validar contra el esquema de Kubernetes 1.31
+        run: python scripts/validar_k8s.py
+
+  imagenes:
+    name: Construir y publicar imagenes
+    needs: [pruebas-backend, validar-kubernetes]
+    runs-on: ubuntu-latest
+    outputs:
+      etiqueta: ${{ steps.vars.outputs.etiqueta }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Etiqueta = SHA corto del commit
+        id: vars
+        run: echo "etiqueta=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - name: Iniciar sesion en DockerHub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Imagen del backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/entrega2-backend:${{ steps.vars.outputs.etiqueta }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/entrega2-backend:latest
+      - name: Imagen del frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/entrega2-frontend:${{ steps.vars.outputs.etiqueta }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/entrega2-frontend:latest
+
+  actualizar-manifiesto:
+    name: Actualizar etiquetas en k8s/kustomization.yaml
+    needs: imagenes
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Poner la etiqueta del commit en el manifiesto
+        run: python scripts/actualizar_etiquetas.py "${{ needs.imagenes.outputs.etiqueta }}"
+      - name: Guardar el cambio en git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add k8s/kustomization.yaml
+          git diff --cached --quiet || git commit -m "ci: imagenes con etiqueta ${{ needs.imagenes.outputs.etiqueta }} [skip ci]"
+          git push
