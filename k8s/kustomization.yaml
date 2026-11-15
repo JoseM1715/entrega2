@@ -12,6 +12,6 @@ resources:
   - 40-frontend.yaml
 images:
   - name: josem1715/entrega2-backend
-    newTag: 1.0.0
+    newTag: 66c5568
   - name: josem1715/entrega2-frontend
-    newTag: 1.0.0
+    newTag: 66c5568
