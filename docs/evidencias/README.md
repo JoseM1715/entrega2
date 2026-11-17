@@ -15,3 +15,12 @@ Capturas de la entrega, por si algo falla en vivo durante la demo. Las del 01 al
 | `09-ci-pr-fallo-controlado.png` | Pull Request #1 con fallo controlado (`replicas: uno`): la validacion de manifiestos falla con `'uno' is not of type 'integer'` y los jobs de imagenes y manifiesto no corren | D2 |
 
 Enlaces en vivo (CI, Pull Request, Docker Hub y trazabilidad): [ci-enlaces.md](ci-enlaces.md).
+
+## Logs de terminal (Jose, Minikube)
+Salida completa de la terminal, en texto. No contienen contrasenas: el Secret solo aparece como referencia (`<set to the key 'PG_PASSWORD' in secret 'app-secrets'>`).
+
+| Archivo | Que muestra | Criterio |
+|---|---|---|
+| `logs/10-diagnostico-falla-y-rollback.txt` | Borrar `db-0` y recuperacion, `get pvc`, logs del backend y del seed, `describe` (probes, limites, Secret por referencia), eventos, falla provocada con una imagen que no existe (`ImagePullBackOff`) y `rollout undo` | D4, D5, D7, D8 |
+| `logs/11-escalado-y-trazabilidad-de-imagenes.txt` | `rollout undo`, escalar el backend a 2 replicas y volver a 1, y `custom-columns` con la imagen de cada pod (etiqueta del commit) | D6, D8 |
+| `logs/12-e2e-playwright-jose.txt` | Pruebas E2E con Playwright contra el frontend en Minikube | D5, D9 |

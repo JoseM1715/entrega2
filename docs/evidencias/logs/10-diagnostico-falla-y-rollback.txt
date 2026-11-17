@@ -1,0 +1,291 @@
+Windows PowerShell 5.1
+Copyright (C) Microsoft Corporation. Todos los derechos reservados.
+
+PS C:\Users\jose1> cd C:\entrega2-final
+PS C:\entrega2-final> kubectl delete pod db-0 -n ahorro
+pod "db-0" deleted from ahorro namespace
+PS C:\entrega2-final> kubectl get pods -n ahorro -w
+NAME                       READY   STATUS      RESTARTS   AGE
+backend-84bc4f94fb-59t89   1/1     Running     0          8m16s
+db-0                       0/1     Running     0          2s
+frontend-dc9d4c6dd-h97zd   1/1     Running     0          8m16s
+seed-g2p9f                 0/1     Completed   0          8m16s
+db-0                       1/1     Running     0          6s
+db-0                       1/1     Running     0          6s
+PS C:\entrega2-final> kubectl get pvc -n ahorro
+NAME         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+datos-db-0   Bound    pvc-8e382d3c-c5d3-45bb-b2c0-05323f01f9ef   1Gi        RWO            standard       <unset>                 9m24s
+PS C:\entrega2-final> kubectl get pods,svc,pvc -n ahorro
+NAME                           READY   STATUS      RESTARTS   AGE
+pod/backend-84bc4f94fb-59t89   1/1     Running     0          10m
+pod/db-0                       1/1     Running     0          107s
+pod/frontend-dc9d4c6dd-h97zd   1/1     Running     0          10m
+pod/seed-g2p9f                 0/1     Completed   0          10m
+
+NAME               TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+service/backend    ClusterIP   10.100.73.46   <none>        5000/TCP       10m
+service/db         ClusterIP   None           <none>        5432/TCP       10m
+service/frontend   NodePort    10.98.239.55   <none>        80:30080/TCP   10m
+
+NAME                               STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/datos-db-0   Bound    pvc-8e382d3c-c5d3-45bb-b2c0-05323f01f9ef   1Gi        RWO            standard       <unset>                 10m
+PS C:\entrega2-final> kubectl logs deploy/backend -n ahorro --tail=20
+[2026-11-17 15:01:55 +0000] [1] [INFO] Starting gunicorn 27.0.1
+[2026-11-17 15:01:55 +0000] [1] [INFO] Listening at: http://0.0.0.0:5000 (1)
+[2026-11-17 15:01:55 +0000] [1] [INFO] Using worker: sync
+[2026-11-17 15:01:55 +0000] [7] [INFO] Booting worker with pid: 7
+[2026-11-17 15:01:55 +0000] [8] [INFO] Booting worker with pid: 8
+[2026-11-17 15:01:56 +0000] [1] [INFO] Control socket listening at /home/appuser/.gunicorn/gunicorn.ctl
+PS C:\entrega2-final> kubectl logs job/seed -n ahorro
+Defaulted container "seed" out of: seed, esperar-db (init)
+Creando tablas...
+Cargando administrador, tabla maestra y usuarios de ejemplo...
+Metas de ejemplo nuevas: 2
+✅ Base de datos lista.
+PS C:\entrega2-final> kubectl describe pod -l app=backend -n ahorro
+Name:             backend-84bc4f94fb-59t89
+Namespace:        ahorro
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Tue, 17 Nov 2026 10:01:41 -0500
+Labels:           app=backend
+                  pod-template-hash=84bc4f94fb
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.6
+IPs:
+  IP:           10.244.0.6
+Controlled By:  ReplicaSet/backend-84bc4f94fb
+Containers:
+  backend:
+    Container ID:   containerd://1d73f4da6d6808ee1d4b637a7b1bb01a2ab04757af63b9b1ef2b74693e72de14
+    Image:          josem1715/entrega2-backend:558974d
+    Image ID:       docker.io/josem1715/entrega2-backend@sha256:3958cb542d7bf9271bbef8958743083c37fce87b93226b04ebfb3ae09f288daa
+    Port:           5000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 17 Nov 2026 10:01:54 -0500
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     500m
+      memory:  256Mi
+    Requests:
+      cpu:      100m
+      memory:   128Mi
+    Liveness:   http-get http://:5000/health delay=10s timeout=1s period=10s #success=1 #failure=3
+    Readiness:  http-get http://:5000/health delay=3s timeout=1s period=5s #success=1 #failure=3
+    Environment Variables from:
+      app-config  ConfigMap  Optional: false
+    Environment:
+      PG_PASSWORD:  <set to the key 'PG_PASSWORD' in secret 'app-secrets'>  Optional: false
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-5nmfx (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-5nmfx:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  10m    default-scheduler  Successfully assigned ahorro/backend-84bc4f94fb-59t89 to minikube
+  Normal  Pulling    10m    kubelet            spec.containers{backend}: Pulling image "josem1715/entrega2-backend:558974d"
+  Normal  Pulled     9m48s  kubelet            spec.containers{backend}: Successfully pulled image "josem1715/entrega2-backend:558974d" in 12.16s (12.161s including waiting). Image size: 50130432 bytes.
+  Normal  Created    9m48s  kubelet            spec.containers{backend}: Container created
+  Normal  Started    9m48s  kubelet            spec.containers{backend}: Container started
+PS C:\entrega2-final> kubectl get events -n ahorro --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON                  OBJECT                             MESSAGE
+10m         Normal    Scheduled               pod/seed-g2p9f                     Successfully assigned ahorro/seed-g2p9f to minikube
+10m         Normal    SuccessfulCreate        replicaset/frontend-dc9d4c6dd      Created pod: frontend-dc9d4c6dd-h97zd
+10m         Normal    SuccessfulCreate        job/seed                           Created pod: seed-g2p9f
+10m         Normal    Scheduled               pod/backend-84bc4f94fb-59t89       Successfully assigned ahorro/backend-84bc4f94fb-59t89 to minikube
+10m         Normal    ScalingReplicaSet       deployment/frontend                Scaled up replica set frontend-dc9d4c6dd from 0 to 1
+10m         Normal    SuccessfulCreate        replicaset/backend-84bc4f94fb      Created pod: backend-84bc4f94fb-59t89
+10m         Normal    ScalingReplicaSet       deployment/backend                 Scaled up replica set backend-84bc4f94fb from 0 to 1
+10m         Normal    ExternalProvisioning    persistentvolumeclaim/datos-db-0   Waiting for a volume to be created either by the external provisioner 'k8s.io/minikube-hostpath' or manually by the system administrator. If volume creation is delayed, please verify that the provisioner is running and correctly registered.
+10m         Normal    Provisioning            persistentvolumeclaim/datos-db-0   External provisioner is provisioning volume for claim "ahorro/datos-db-0"
+10m         Normal    ProvisioningSucceeded   persistentvolumeclaim/datos-db-0   Successfully provisioned volume pvc-8e382d3c-c5d3-45bb-b2c0-05323f01f9ef
+10m         Warning   FailedScheduling        pod/db-0                           0/1 nodes are available: pod has unbound immediate PersistentVolumeClaims. not found
+10m         Normal    Scheduled               pod/db-0                           Successfully assigned ahorro/db-0 to minikube
+10m         Normal    Scheduled               pod/frontend-dc9d4c6dd-h97zd       Successfully assigned ahorro/frontend-dc9d4c6dd-h97zd to minikube
+10m         Normal    SuccessfulCreate        statefulset/db                     Create Claim datos-db-0 Pod db-0 in StatefulSet db success
+10m         Normal    Pulling                 pod/seed-g2p9f                     Pulling image "postgres:16-alpine"
+10m         Normal    Pulling                 pod/backend-84bc4f94fb-59t89       Pulling image "josem1715/entrega2-backend:558974d"
+10m         Normal    Pulling                 pod/frontend-dc9d4c6dd-h97zd       Pulling image "josem1715/entrega2-frontend:558974d"
+10m         Normal    Pulling                 pod/db-0                           Pulling image "postgres:16-alpine"
+9m50s       Normal    Pulled                  pod/backend-84bc4f94fb-59t89       Successfully pulled image "josem1715/entrega2-backend:558974d" in 12.16s (12.161s including waiting). Image size: 50130432 bytes.
+9m50s       Normal    Created                 pod/backend-84bc4f94fb-59t89       Container created
+9m50s       Normal    Started                 pod/backend-84bc4f94fb-59t89       Container started
+9m44s       Normal    Started                 pod/frontend-dc9d4c6dd-h97zd       Container started
+9m44s       Normal    Created                 pod/frontend-dc9d4c6dd-h97zd       Container created
+9m44s       Normal    Pulled                  pod/frontend-dc9d4c6dd-h97zd       Successfully pulled image "josem1715/entrega2-frontend:558974d" in 6.272s (18.261s including waiting). Image size: 20977541 bytes.
+9m31s       Normal    Pulled                  pod/seed-g2p9f                     Successfully pulled image "postgres:16-alpine" in 12.571s (30.718s including waiting). Image size: 116258321 bytes.
+9m31s       Normal    Created                 pod/seed-g2p9f                     Container created
+9m31s       Normal    Started                 pod/seed-g2p9f                     Container started
+9m30s       Normal    Started                 pod/db-0                           Container started
+9m30s       Normal    Pulled                  pod/db-0                           Successfully pulled image "postgres:16-alpine" in 1.16s (31.573s including waiting). Image size: 116258321 bytes.
+9m30s       Normal    Created                 pod/db-0                           Container created
+9m23s       Normal    Pulled                  pod/seed-g2p9f                     Container image "josem1715/entrega2-backend:558974d" already present on machine and can be accessed by the pod
+9m23s       Normal    Started                 pod/seed-g2p9f                     Container started
+9m23s       Normal    Created                 pod/seed-g2p9f                     Container created
+9m19s       Normal    Completed               job/seed                           Job completed
+110s        Normal    Killing                 pod/db-0                           Stopping container postgres
+109s        Normal    Scheduled               pod/db-0                           Successfully assigned ahorro/db-0 to minikube
+109s        Normal    SuccessfulCreate        statefulset/db                     Create Pod db-0 in StatefulSet db successful
+108s        Normal    Started                 pod/db-0                           Container started
+108s        Normal    Created                 pod/db-0                           Container created
+108s        Normal    Pulled                  pod/db-0                           Container image "postgres:16-alpine" already present on machine and can be accessed by the pod
+PS C:\entrega2-final> kubectl set image deployment/backend backend=josem1715/entrega2-backend:no-existe -n ahorro
+deployment.apps/backend image updated
+PS C:\entrega2-final> kubectl get pods -n ahorro
+NAME                       READY   STATUS              RESTARTS   AGE
+backend-7d48546d9d-5z9kr   0/1     ContainerCreating   0          0s
+backend-84bc4f94fb-59t89   1/1     Running             0          10m
+db-0                       1/1     Running             0          2m34s
+frontend-dc9d4c6dd-h97zd   1/1     Running             0          10m
+seed-g2p9f                 0/1     Completed           0          10m
+PS C:\entrega2-final>
+PS C:\entrega2-final> kubectl describe pod -l app=backend -n ahorro
+Name:             backend-7d48546d9d-5z9kr
+Namespace:        ahorro
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Tue, 17 Nov 2026 10:12:29 -0500
+Labels:           app=backend
+                  pod-template-hash=7d48546d9d
+Annotations:      <none>
+Status:           Pending
+IP:               10.244.0.11
+IPs:
+  IP:           10.244.0.11
+Controlled By:  ReplicaSet/backend-7d48546d9d
+Containers:
+  backend:
+    Container ID:
+    Image:          josem1715/entrega2-backend:no-existe
+    Image ID:
+    Port:           5000/TCP
+    Host Port:      0/TCP
+    State:          Waiting
+      Reason:       ErrImagePull
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      cpu:     500m
+      memory:  256Mi
+    Requests:
+      cpu:      100m
+      memory:   128Mi
+    Liveness:   http-get http://:5000/health delay=10s timeout=1s period=10s #success=1 #failure=3
+    Readiness:  http-get http://:5000/health delay=3s timeout=1s period=5s #success=1 #failure=3
+    Environment Variables from:
+      app-config  ConfigMap  Optional: false
+    Environment:
+      PG_PASSWORD:  <set to the key 'PG_PASSWORD' in secret 'app-secrets'>  Optional: false
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-hgnn6 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  kube-api-access-hgnn6:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+
+
+Name:             backend-84bc4f94fb-59t89
+Namespace:        ahorro
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Tue, 17 Nov 2026 10:01:41 -0500
+Labels:           app=backend
+                  pod-template-hash=84bc4f94fb
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.6
+IPs:
+  IP:           10.244.0.6
+Controlled By:  ReplicaSet/backend-84bc4f94fb
+Containers:
+  backend:
+    Container ID:   containerd://1d73f4da6d6808ee1d4b637a7b1bb01a2ab04757af63b9b1ef2b74693e72de14
+    Image:          josem1715/entrega2-backend:558974d
+    Image ID:       docker.io/josem1715/entrega2-backend@sha256:3958cb542d7bf9271bbef8958743083c37fce87b93226b04ebfb3ae09f288daa
+    Port:           5000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 17 Nov 2026 10:01:54 -0500
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     500m
+      memory:  256Mi
+    Requests:
+      cpu:      100m
+      memory:   128Mi
+    Liveness:   http-get http://:5000/health delay=10s timeout=1s period=10s #success=1 #failure=3
+    Readiness:  http-get http://:5000/health delay=3s timeout=1s period=5s #success=1 #failure=3
+    Environment Variables from:
+      app-config  ConfigMap  Optional: false
+    Environment:
+      PG_PASSWORD:  <set to the key 'PG_PASSWORD' in secret 'app-secrets'>  Optional: false
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-5nmfx (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-5nmfx:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+PS C:\entrega2-final> kubectl rollout undo deployment/backend -n ahorro
+Warning: resource deployments/backend was previously managed with 'kubectl apply'. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future 'kubectl apply' operations. Consider using 'kubectl apply' with your previous configuration file instead.
+deployment.apps/backend rolled back
+PS C:\entrega2-final> kubectl rollout status deployment/backend -n ahorro
+deployment "backend" successfully rolled out
+PS C:\entrega2-final> kubectl get pods -n ahorro
+NAME                       READY   STATUS      RESTARTS   AGE
+backend-84bc4f94fb-59t89   1/1     Running     0          11m
+db-0                       1/1     Running     0          2m53s
+frontend-dc9d4c6dd-h97zd   1/1     Running     0          11m
+seed-g2p9f                 0/1     Completed   0          11m
+PS C:\entrega2-final>

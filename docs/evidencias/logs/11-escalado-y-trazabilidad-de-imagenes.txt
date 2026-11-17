@@ -1,0 +1,77 @@
+     Successfully assigned ahorro/backend-84bc4f94fb-59t89 to minikube
+13m         Normal    SuccessfulCreate        job/seed                           Created pod: seed-g2p9f
+13m         Warning   FailedScheduling        pod/db-0                           0/1 nodes are available: pod has unbound immediate PersistentVolumeClaims. not found
+13m         Normal    ScalingReplicaSet       deployment/backend                 Scaled up replica set backend-84bc4f94fb from 0 to 1
+13m         Normal    Provisioning            persistentvolumeclaim/datos-db-0   External provisioner is provisioning volume for claim "ahorro/datos-db-0"
+13m         Normal    Pulling                 pod/frontend-dc9d4c6dd-h97zd       Pulling image "josem1715/entrega2-frontend:558974d"
+13m         Normal    Pulling                 pod/db-0                           Pulling image "postgres:16-alpine"
+13m         Normal    Pulling                 pod/backend-84bc4f94fb-59t89       Pulling image "josem1715/entrega2-backend:558974d"
+13m         Normal    Pulling                 pod/seed-g2p9f                     Pulling image "postgres:16-alpine"
+13m         Normal    Pulled                  pod/backend-84bc4f94fb-59t89       Successfully pulled image "josem1715/entrega2-backend:558974d" in 12.16s (12.161s including waiting). Image size: 50130432 bytes.
+13m         Normal    Created                 pod/backend-84bc4f94fb-59t89       Container created
+13m         Normal    Started                 pod/backend-84bc4f94fb-59t89       Container started
+13m         Normal    Pulled                  pod/frontend-dc9d4c6dd-h97zd       Successfully pulled image "josem1715/entrega2-frontend:558974d" in 6.272s (18.261s including waiting). Image size: 20977541 bytes.
+13m         Normal    Created                 pod/frontend-dc9d4c6dd-h97zd       Container created
+13m         Normal    Started                 pod/frontend-dc9d4c6dd-h97zd       Container started
+12m         Normal    Pulled                  pod/seed-g2p9f                     Successfully pulled image "postgres:16-alpine" in 12.571s (30.718s including waiting). Image size: 116258321 bytes.
+12m         Normal    Started                 pod/seed-g2p9f                     Container started
+12m         Normal    Created                 pod/seed-g2p9f                     Container created
+12m         Normal    Pulled                  pod/db-0                           Successfully pulled image "postgres:16-alpine" in 1.16s (31.573s including waiting). Image size: 116258321 bytes.
+12m         Normal    Started                 pod/db-0                           Container started
+12m         Normal    Created                 pod/db-0                           Container created
+12m         Normal    Pulled                  pod/seed-g2p9f                     Container image "josem1715/entrega2-backend:558974d" already present on machine and can be accessed by the pod
+12m         Normal    Created                 pod/seed-g2p9f                     Container created
+12m         Normal    Started                 pod/seed-g2p9f                     Container started
+12m         Normal    Completed               job/seed                           Job completed
+5m10s       Normal    Killing                 pod/db-0                           Stopping container postgres
+5m9s        Normal    Scheduled               pod/db-0                           Successfully assigned ahorro/db-0 to minikube
+5m9s        Normal    SuccessfulCreate        statefulset/db                     Create Pod db-0 in StatefulSet db successful
+5m8s        Normal    Pulled                  pod/db-0                           Container image "postgres:16-alpine" already present on machine and can be accessed by the pod
+5m8s        Normal    Created                 pod/db-0                           Container created
+5m8s        Normal    Started                 pod/db-0                           Container started
+2m35s       Normal    Scheduled               pod/backend-7d48546d9d-5z9kr       Successfully assigned ahorro/backend-7d48546d9d-5z9kr to minikube
+2m35s       Normal    SuccessfulCreate        replicaset/backend-7d48546d9d      Created pod: backend-7d48546d9d-5z9kr
+2m34s       Normal    BackOff                 pod/backend-7d48546d9d-5z9kr       Back-off pulling image "josem1715/entrega2-backend:no-existe"
+2m34s       Warning   Failed                  pod/backend-7d48546d9d-5z9kr       Error: ImagePullBackOff
+2m20s       Normal    Pulling                 pod/backend-7d48546d9d-5z9kr       Pulling image "josem1715/entrega2-backend:no-existe"
+2m19s       Warning   Failed                  pod/backend-7d48546d9d-5z9kr       Error: ErrImagePull
+2m19s       Warning   Failed                  pod/backend-7d48546d9d-5z9kr       Failed to pull image "josem1715/entrega2-backend:no-existe": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/josem1715/entrega2-backend:no-existe": failed to resolve reference "docker.io/josem1715/entrega2-backend:no-existe": docker.io/josem1715/entrega2-backend:no-existe: not found
+2m17s       Normal    SuccessfulDelete        replicaset/backend-7d48546d9d      Deleted pod: backend-7d48546d9d-5z9kr
+2m17s       Normal    ScalingReplicaSet       deployment/backend                 Scaled down replica set backend-7d48546d9d from 1 to 0
+82s         Normal    ScalingReplicaSet       deployment/backend                 Scaled up replica set backend-7d48546d9d from 0 to 1
+81s         Normal    Scheduled               pod/backend-7d48546d9d-7dstk       Successfully assigned ahorro/backend-7d48546d9d-7dstk to minikube
+81s         Normal    SuccessfulCreate        replicaset/backend-7d48546d9d      Created pod: backend-7d48546d9d-7dstk
+37s         Normal    Pulling                 pod/backend-7d48546d9d-7dstk       Pulling image "josem1715/entrega2-backend:no-existe"
+36s         Warning   Failed                  pod/backend-7d48546d9d-7dstk       Failed to pull image "josem1715/entrega2-backend:no-existe": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/josem1715/entrega2-backend:no-existe": failed to resolve reference "docker.io/josem1715/entrega2-backend:no-existe": docker.io/josem1715/entrega2-backend:no-existe: not found
+36s         Warning   Failed                  pod/backend-7d48546d9d-7dstk       Error: ErrImagePull
+10s         Warning   Failed                  pod/backend-7d48546d9d-7dstk       Error: ImagePullBackOff
+10s         Normal    BackOff                 pod/backend-7d48546d9d-7dstk       Back-off pulling image "josem1715/entrega2-backend:no-existe"
+PS C:\entrega2-final> kubectl rollout undo deployment/backend -n ahorro
+Warning: resource deployments/backend was previously managed with 'kubectl apply'. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future 'kubectl apply' operations. Consider using 'kubectl apply' with your previous configuration file instead.
+deployment.apps/backend rolled back
+PS C:\entrega2-final> kubectl rollout status deployment/backend -n ahorro
+deployment "backend" successfully rolled out
+PS C:\entrega2-final> kubectl get pods -n ahorro
+NAME                       READY   STATUS      RESTARTS   AGE
+backend-84bc4f94fb-59t89   1/1     Running     0          13m
+db-0                       1/1     Running     0          5m24s
+frontend-dc9d4c6dd-h97zd   1/1     Running     0          13m
+seed-g2p9f                 0/1     Completed   0          13m
+PS C:\entrega2-final> kubectl scale deployment/backend --replicas=2 -n ahorro
+deployment.apps/backend scaled
+PS C:\entrega2-final> kubectl get pods -n ahorro
+NAME                       READY   STATUS              RESTARTS   AGE
+backend-84bc4f94fb-59t89   1/1     Running             0          14m
+backend-84bc4f94fb-nbmm9   0/1     ContainerCreating   0          0s
+db-0                       1/1     Running             0          6m5s
+frontend-dc9d4c6dd-h97zd   1/1     Running             0          14m
+seed-g2p9f                 0/1     Completed           0          14m
+PS C:\entrega2-final> kubectl scale deployment/backend --replicas=1 -n ahorro
+deployment.apps/backend scaled
+PS C:\entrega2-final> kubectl get pods -n ahorro -o custom-columns=POD:.metadata.name,IMAGEN:.spec.containers[*].image
+POD                        IMAGEN
+backend-84bc4f94fb-59t89   josem1715/entrega2-backend:558974d
+db-0                       postgres:16-alpine
+frontend-dc9d4c6dd-h97zd   josem1715/entrega2-frontend:558974d
+seed-g2p9f                 josem1715/entrega2-backend:558974d
+PS C:\entrega2-final>
