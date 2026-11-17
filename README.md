@@ -38,7 +38,7 @@ Calcula la cuota mensual que hay que ahorrar para llegar a una meta (interés co
 1. El usuario abre la página (http://localhost:8080), elige un usuario e ingresa meta, plazo y abono extra.
 2. El **frontend** envía los datos a `/api/metas`. nginx reenvía todo lo que empiece por `/api/` al **backend**.
 3. El **backend** valida los datos, calcula la cuota con la fórmula de anualidad de valor futuro y la guarda en la **base de datos**.
-4. La página muestra la cuota y el ID de la meta, que luego se puede buscar.
+4. La página muestra la cuota y el ID de la meta, que luego se puede buscar..
 
 ## Tecnologías y versiones
 
