@@ -1,28 +1,50 @@
 # Guion de la demo (15 a 20 minutos)
 
-Ensayarlo completo antes de la defensa. Antes de empezar: Docker Desktop abierto, Minikube corriendo, todo desplegado, una ventana de PowerShell por persona y las evidencias de respaldo a la mano.
+## Reparto
+- **Francisco** ejecuta toda la parte practica en vivo (teclado y pantalla): GitHub, Docker Hub, Minikube, la pagina y los comandos.
+- **Valentina** explica la parte conceptual de CI, imagenes y trazabilidad.
+- **Jose** explica la parte conceptual de arquitectura, Kubernetes y diagnostico.
+- La demo corre en **un solo computador** (el de Francisco, con su Minikube ya desplegado).
+- Los tres deben saber explicar cualquier parte del sistema y responder cualquier pregunta.
 
-| Min | Quien | Que muestra | Criterio |
-|---|---|---|---|
-| 0-3 | Francisco | Pitch y diagrama de arquitectura (`docs/arquitectura.md`); repos, ramas, commits y README | P1-P4, D1 |
-| 3-8 | Valentina | CI en GitHub Actions: ejecucion de un commit con pruebas y build; un cambio que falla y se bloquea; imagenes con etiqueta en DockerHub | D2, D3 |
-| 8-10 | Valentina | Trazabilidad: del commit a la etiqueta de la imagen y al pod (`kubectl get pods -o custom-columns=...`) | D6 |
-| 10-14 | Jose | Minikube: `kubectl get pods,svc,pvc -n ahorro`, ConfigMap y Secret (sin mostrar claves), probes y recursos | D4, D7 |
-| 14-17 | Francisco | Flujo E2E en vivo: elegir usuario, guardar meta, buscarla, caso de error, borrar `db-0` y comprobar que los datos siguen | D5 |
-| 17-20 | Jose | Diagnostico: logs, describe, falla provocada (`ImagePullBackOff`) y recuperacion con `rollout undo`; escalar a 2 replicas | D8 |
-| Final | Los tres | Preguntas | D9 |
+## Antes de empezar (checklist)
+- [ ] Docker Desktop abierto, Minikube corriendo y todo desplegado (`kubectl get pods -n ahorro`: `db-0`, `backend`, `frontend` en `1/1`, `seed` en `Completed`).
+- [ ] Ventana 1 de PowerShell: `minikube service frontend -n ahorro --url` abierta (no cerrar) y la direccion abierta en el navegador.
+- [ ] Ventana 2 de PowerShell: lista para los comandos, dentro de la carpeta del repo.
+- [ ] Pestanas del navegador listas: repo en GitHub, pestana **Actions**, el Pull Request del fallo controlado, Docker Hub (etiquetas) y la presentacion.
+- [ ] Carpeta de evidencias de respaldo abierta.
+- [ ] Nada de contrasenas ni tokens a la vista.
 
-## Comandos en orden (copiar de `k8s/README.md`)
+## Linea de tiempo
+| Min | Ejecuta | Explica | Que se muestra | Criterio |
+|---|---|---|---|---|
+| 0-4 | Francisco (pasa las diapositivas) | Jose y Valentina | Pitch | P1-P4 |
+| 4-6 | Francisco | Jose | Repos, ramas, commits, README y diagrama (`docs/arquitectura.md`) | D1 |
+| 6-11 | Francisco | Valentina | CI en GitHub Actions: ejecucion con pruebas y build; Pull Request con fallo controlado (rojo, no publica); imagenes con etiqueta en Docker Hub | D2, D3 |
+| 11-13 | Francisco | Valentina | Trazabilidad: commit, etiqueta de la imagen, manifiesto y pod | D6 |
+| 13-16 | Francisco | Jose | Minikube: pods, servicios, volumen, ConfigMap y Secret (sin mostrar claves), probes y recursos | D4, D7 |
+| 16-18 | Francisco | Jose | Flujo en la pagina: guardar meta, buscarla, caso de error; borrar `db-0` y comprobar que los datos siguen | D5 |
+| 18-21 | Francisco | Jose | Diagnostico: logs, `describe`, falla provocada (`ImagePullBackOff`) y `rollout undo`; escalar a 2 replicas | D8 |
+| Final | Los tres | Los tres | Preguntas | D9 |
+
+## Comandos en orden (los ejecuta Francisco)
 1. `kubectl get pods,svc,pvc -n ahorro`
-2. `kubectl get configmap app-config -n ahorro -o yaml` (el Secret no se imprime)
+2. `kubectl get configmap app-config -n ahorro -o yaml` (el Secret **no** se imprime)
 3. `kubectl get pods -n ahorro -o custom-columns=POD:.metadata.name,IMAGEN:.spec.containers[*].image`
-4. Pagina: guardar y buscar meta; caso de error
-5. `kubectl delete pod db-0 -n ahorro` y buscar la meta otra vez
-6. `kubectl logs deploy/backend -n ahorro`
-7. `kubectl set image deployment/backend backend=josem1715/entrega2-backend:no-existe -n ahorro` y `kubectl get pods -n ahorro`
-8. `kubectl describe pod -l app=backend -n ahorro` y explicar el `ImagePullBackOff`
-9. `kubectl rollout undo deployment/backend -n ahorro`
-10. `kubectl scale deployment/backend --replicas=2 -n ahorro`
+4. `kubectl describe pod -l app=backend -n ahorro` (mostrar probes, limites y `PG_PASSWORD` como referencia al Secret)
+5. Pagina: guardar una meta (por ejemplo usuario Jose Angel, 2500000, 12 meses, extra 100000, mes 6; debe dar 191.516,95), anotar el ID y buscarla; luego un caso de error (un abono sin mes)
+6. `kubectl delete pod db-0 -n ahorro`, `kubectl get pods -n ahorro -w` (Ctrl+C cuando `db-0` vuelva a `1/1`) y buscar la meta otra vez
+7. `kubectl logs deploy/backend -n ahorro --tail=20`
+8. `kubectl set image deployment/backend backend=josem1715/entrega2-backend:no-existe -n ahorro`
+9. Esperar unos 30 segundos y `kubectl get pods -n ahorro` (aparece `ImagePullBackOff`; el backend anterior sigue `1/1`)
+10. `kubectl describe pod NOMBRE_DEL_POD_MALO -n ahorro` y senalar en `Events` el `Failed to pull image ... not found`
+11. `kubectl rollout undo deployment/backend -n ahorro` y `kubectl rollout status deployment/backend -n ahorro`
+12. `kubectl scale deployment/backend --replicas=2 -n ahorro`, esperar y `kubectl get pods -n ahorro`; luego volver a `--replicas=1`
+
+## Si algo falla en vivo
+- Explicar con calma que paso y mostrar la captura de respaldo de ese paso.
+- Si la pagina no abre, revisar que la ventana de `minikube service` siga abierta (el puerto cambia si se reinicia).
+- Para empezar de cero: `powershell -ExecutionPolicy Bypass -File .\scripts\desplegar.ps1`.
 
 ## Reglas de la rubrica
 - No mostrar contrasenas ni tokens.
