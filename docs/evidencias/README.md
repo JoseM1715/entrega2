@@ -23,4 +23,3 @@ Salida completa de la terminal, en texto. No contienen contrasenas: el Secret so
 |---|---|---|
 | `logs/10-diagnostico-falla-y-rollback.txt` | Borrar `db-0` y recuperacion, `get pvc`, logs del backend y del seed, `describe` (probes, limites, Secret por referencia), eventos, falla provocada con una imagen que no existe (`ImagePullBackOff`) y `rollout undo` | D4, D5, D7, D8 |
 | `logs/11-escalado-y-trazabilidad-de-imagenes.txt` | `rollout undo`, escalar el backend a 2 replicas y volver a 1, y `custom-columns` con la imagen de cada pod (etiqueta del commit) | D6, D8 |
-| `logs/12-e2e-playwright-jose.txt` | Pruebas E2E con Playwright contra el frontend en Minikube | D5, D9 |
