@@ -19,6 +19,7 @@ Calcula la cuota mensual que hay que ahorrar para llegar a una meta (interés co
 13. [Problemas frecuentes](#problemas-frecuentes)
 14. [Estructura del proyecto](#estructura-del-proyecto)
 15. [Historias de usuario](#historias-de-usuario)
+    
 
 ## Integrantes
 | Nombre | Rol |
@@ -228,3 +229,4 @@ entrega2/
 
 ## Historias de usuario
 Ver [docs/historias_de_usuario.md](docs/historias_de_usuario.md), con el responsable de cada una.
+
