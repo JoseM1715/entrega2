@@ -3,6 +3,7 @@
 ## Reparto
 - **Francisco** ejecuta toda la parte practica en vivo (teclado y pantalla): GitHub, Docker Hub, Minikube, la pagina y los comandos.
 - **Valentina** explica la parte conceptual de CI, imagenes y trazabilidad.
+- En el **pitch** hablan los tres: Jose (portada, arquitectura, practicas y cierre), Francisco (problema y parte practica) y Valentina (solucion, alcance y cadena de entrega). Las notas de cada diapositiva dicen quien habla.
 - **Jose** explica la parte conceptual de arquitectura, Kubernetes y diagnostico.
 - La demo corre en **un solo computador** (el de Francisco, con su Minikube ya desplegado).
 - Los tres deben saber explicar cualquier parte del sistema y responder cualquier pregunta.
@@ -18,7 +19,7 @@
 ## Linea de tiempo
 | Min | Ejecuta | Explica | Que se muestra | Criterio |
 |---|---|---|---|---|
-| 0-4 | Francisco (pasa las diapositivas) | Jose y Valentina | Pitch | P1-P4 |
+| 0-4 | Francisco pasa las diapositivas | Los tres (cada uno sus diapositivas) | Pitch | P1-P4 |
 | 4-6 | Francisco | Jose | Repos, ramas, commits, README y diagrama (`docs/arquitectura.md`) | D1 |
 | 6-11 | Francisco | Valentina | CI en GitHub Actions: ejecucion con pruebas y build; Pull Request con fallo controlado (rojo, no publica); imagenes con etiqueta en Docker Hub | D2, D3 |
 | 11-13 | Francisco | Valentina | Trazabilidad: commit, etiqueta de la imagen, manifiesto y pod | D6 |
