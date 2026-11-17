@@ -14,7 +14,17 @@ Todo el sistema (base de datos, seeding, backend y frontend) se despliega en el 
 | `kustomization.yaml` | Junta todo y fija la **etiqueta de cada imagen** (`images:`) |
 
 ## 1. Desplegar
-Requisitos: Docker Desktop abierto, `minikube` y `kubectl`. Desde la carpeta del monorepo (PowerShell):
+Requisitos: Docker Desktop abierto, `minikube` y `kubectl`.
+
+### Opcion rapida (un solo comando)
+Desde la carpeta del monorepo, en PowerShell:
+```
+powershell -ExecutionPolicy Bypass -File .\scripts\desplegar.ps1
+```
+El script inicia Minikube, crea el namespace y el Secret (le pide dos claves que usted elige; no se muestran en pantalla), aplica los manifiestos y espera a que todo este listo. Al final imprime el estado y el comando para abrir la pagina. Se puede repetir sin problema.
+
+### Paso a paso (lo que hace el script)
+Desde la carpeta del monorepo (PowerShell):
 
 ```
 minikube start
