@@ -18,7 +18,8 @@ Calcula la cuota mensual que hay que ahorrar para llegar a una meta (interés co
 12. [Publicar las imágenes en DockerHub](#publicar-las-imágenes-en-dockerhub)
 13. [Problemas frecuentes](#problemas-frecuentes)
 14. [Estructura del proyecto](#estructura-del-proyecto)
-15. [Historias de usuario](#historias-de-usuario)
+15. [Despliegue en Kubernetes, CI y entrega](#despliegue-en-kubernetes-ci-y-entrega)
+16. [Historias de usuario](#historias-de-usuario)
     
 
 ## Integrantes
@@ -221,11 +222,28 @@ entrega2/
 ├── docker-compose.yml        define los servicios db, seed, backend y frontend
 ├── .env.example              plantilla de variables (copiar como .env)
 ├── README.md
-├── docs/historias_de_usuario.md
+├── .github/workflows/ci.yml  integracion continua (pruebas, validacion, imagenes, manifiesto)
+├── k8s/                      manifiestos de Kubernetes (Minikube) y su README
+├── scripts/                  desplegar.ps1, validar_k8s.py, actualizar_etiquetas.py
+├── docs/                     historias, arquitectura, pitch, guion de la demo y evidencias/
 ├── e2e/                      pruebas Playwright
 ├── frontend/                 (submódulo) Dockerfile, .dockerignore, nginx.conf, src/
 └── backend/                  (submódulo) Dockerfile, .dockerignore, app.py, poblar_db.py, sql/, src/
 ```
+
+## Despliegue en Kubernetes, CI y entrega
+
+Ademas de Docker Compose, el sistema se despliega en **Minikube** y se entrega con una cadena automatica: `commit -> CI (GitHub Actions) -> imagen en DockerHub con la etiqueta del commit -> manifiesto -> pod`.
+
+- **Desplegar en Minikube con un solo comando** (Windows PowerShell, con Docker Desktop abierto):
+  ```
+  powershell -ExecutionPolicy Bypass -File .\scripts\desplegar.ps1
+  ```
+  Detalle paso a paso en [k8s/README.md](k8s/README.md). Las contrasenas se piden por consola y quedan solo en un Secret del cluster, nunca en git.
+- **CI:** [.github/workflows/ci.yml](.github/workflows/ci.yml) corre las pruebas del backend, valida los manifiestos, construye y publica las imagenes (etiqueta = SHA corto del commit) y actualiza `k8s/kustomization.yaml`. En un Pull Request no se publica nada.
+- **Arquitectura:** [docs/arquitectura.md](docs/arquitectura.md).
+- **Pitch y demo:** [docs/pitch.md](docs/pitch.md) y [docs/guion_demo.md](docs/guion_demo.md).
+- **Evidencias de respaldo:** [docs/evidencias](docs/evidencias/README.md).
 
 ## Historias de usuario
 Ver [docs/historias_de_usuario.md](docs/historias_de_usuario.md), con el responsable de cada una.
