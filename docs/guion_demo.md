@@ -1,10 +1,10 @@
 # Guion de la demo (15 a 20 minutos)
 
 ## Reparto
-- **Francisco** ejecuta toda la parte practica en vivo (teclado y pantalla): GitHub, Docker Hub, Minikube, la pagina y los comandos.
-- **Valentina** explica la parte conceptual de CI, imagenes y trazabilidad.
-- En el **pitch** hablan los tres: Jose (portada, problema y cierre), Valentina (solucion, alcance y cadena de entrega) y Francisco (arquitectura, practicas, parte practica y decisiones). Las notas de cada diapositiva dicen quien habla.
-- **Francisco** explica ademas la parte tecnica (arquitectura, Kubernetes y diagnostico) mientras la ejecuta; **Jose** complementa con lo conceptual y responde preguntas.
+- **Francisco** es quien mas explica: ejecuta toda la parte practica en vivo (teclado y pantalla) y explica lo tecnico (arquitectura, CI y trazabilidad, Kubernetes, flujo y diagnostico).
+- **Valentina** complementa la parte conceptual de CI, imagenes y trazabilidad y habla en el pitch (solucion y alcance).
+- **Jose** habla en el pitch (portada, problema y cierre), complementa lo conceptual y responde preguntas.
+- En el **pitch**: Jose (portada, problema y cierre), Valentina (solucion y alcance) y Francisco (arquitectura, cadena de entrega, practicas, parte practica y decisiones). Las notas de cada diapositiva dicen quien habla.
 - La demo corre en **un solo computador** (el de Francisco, con su Minikube ya desplegado).
 - Los tres deben saber explicar cualquier parte del sistema y responder cualquier pregunta.
 
@@ -21,8 +21,8 @@
 |---|---|---|---|---|
 | 0-4 | Francisco pasa las diapositivas | Los tres (cada uno sus diapositivas) | Pitch | P1-P4 |
 | 4-6 | Francisco | Francisco (Jose complementa) | Repos, ramas, commits, README y diagrama (`docs/arquitectura.md`) | D1 |
-| 6-11 | Francisco | Valentina | CI en GitHub Actions: ejecucion con pruebas y build; Pull Request con fallo controlado (rojo, no publica); imagenes con etiqueta en Docker Hub | D2, D3 |
-| 11-13 | Francisco | Valentina | Trazabilidad: commit, etiqueta de la imagen, manifiesto y pod | D6 |
+| 6-11 | Francisco | Francisco (Valentina complementa) | CI en GitHub Actions: ejecucion con pruebas y build; Pull Request con fallo controlado (rojo, no publica); imagenes con etiqueta en Docker Hub | D2, D3 |
+| 11-13 | Francisco | Francisco (Valentina complementa) | Trazabilidad: commit, etiqueta de la imagen, manifiesto y pod | D6 |
 | 13-16 | Francisco | Francisco (Jose complementa) | Minikube: pods, servicios, volumen, ConfigMap y Secret (sin mostrar claves), probes y recursos | D4, D7 |
 | 16-18 | Francisco | Francisco (Jose complementa) | Flujo en la pagina: guardar meta, buscarla, caso de error; borrar `db-0` y comprobar que los datos siguen | D5 |
 | 18-21 | Francisco | Francisco (Jose complementa) | Diagnostico: logs, `describe`, falla provocada (`ImagePullBackOff`) y `rollout undo`; escalar a 2 replicas | D8 |
