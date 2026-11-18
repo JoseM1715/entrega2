@@ -225,7 +225,7 @@ entrega2/
 ├── .github/workflows/ci.yml  integracion continua (pruebas, validacion, imagenes, manifiesto)
 ├── k8s/                      manifiestos de Kubernetes (Minikube) y su README
 ├── scripts/                  desplegar.ps1, validar_k8s.py, actualizar_etiquetas.py
-├── docs/                     historias, arquitectura, pitch, guion de la demo y evidencias/
+├── docs/                     historias de usuario, arquitectura y evidencias/
 ├── e2e/                      pruebas Playwright
 ├── frontend/                 (submódulo) Dockerfile, .dockerignore, nginx.conf, src/
 └── backend/                  (submódulo) Dockerfile, .dockerignore, app.py, poblar_db.py, sql/, src/
@@ -242,7 +242,6 @@ Ademas de Docker Compose, el sistema se despliega en **Minikube** y se entrega c
   Detalle paso a paso en [k8s/README.md](k8s/README.md). Las contrasenas se piden por consola y quedan solo en un Secret del cluster, nunca en git.
 - **CI:** [.github/workflows/ci.yml](.github/workflows/ci.yml) corre las pruebas del backend, valida los manifiestos, construye y publica las imagenes (etiqueta = SHA corto del commit) y actualiza `k8s/kustomization.yaml`. En un Pull Request no se publica nada.
 - **Arquitectura:** [docs/arquitectura.md](docs/arquitectura.md).
-- **Pitch y demo:** [docs/pitch.md](docs/pitch.md) y [docs/guion_demo.md](docs/guion_demo.md).
 - **Evidencias de respaldo:** [docs/evidencias](docs/evidencias/README.md).
 
 ## Historias de usuario
