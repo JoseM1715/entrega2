@@ -2,9 +2,9 @@
 
 ## Reparto
 - **Francisco** es quien mas explica: ejecuta toda la parte practica en vivo (teclado y pantalla) y explica lo tecnico (arquitectura, CI y trazabilidad, Kubernetes, flujo y diagnostico).
-- **Valentina** complementa la parte conceptual de CI, imagenes y trazabilidad y habla en el pitch (solucion y alcance).
-- **Jose** habla en el pitch (portada, problema y cierre), complementa lo conceptual y responde preguntas.
-- En el **pitch**: Jose (portada, problema y cierre), Valentina (solucion y alcance) y Francisco (arquitectura, cadena de entrega, practicas, parte practica y decisiones). Las notas de cada diapositiva dicen quien habla.
+- **Valentina** complementa la parte conceptual de CI, imagenes y trazabilidad y habla en el pitch (solucion, alcance y decisiones).
+- **Jose** habla en el pitch (portada, problema y arquitectura), complementa lo conceptual y responde preguntas.
+- En el **pitch** (diapositivas): Jose (1 portada, 2 problema y 5 arquitectura), Valentina (3 solucion, 4 alcance y 9 decisiones) y Francisco (6 entrega, 7 practicas, 8 parte practica y 10 cierre). Las notas de cada diapositiva dicen quien habla.
 - La demo corre en **un solo computador** (el de Francisco, con su Minikube ya desplegado).
 - Los tres deben saber explicar cualquier parte del sistema y responder cualquier pregunta.
 
